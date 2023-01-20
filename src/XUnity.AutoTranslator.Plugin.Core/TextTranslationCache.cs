@@ -127,6 +127,13 @@ namespace XUnity.AutoTranslator.Plugin.Core
             .Select( x => x.FileInfo.FullName );
       }
 
+      private IEnumerable<string> GetTranslationJsonFiles()
+      {
+         return Directory.GetFiles( _pluginDirectory?.FullName ?? Settings.TranslationsPath, $"*", SearchOption.AllDirectories )
+            .Where( x => x.EndsWith( ".json", StringComparison.OrdinalIgnoreCase ) )
+            .Select( x => new FileInfo( x ).FullName );
+      }
+
       internal CompositeTextTranslationCache GetOrCreateCompositeCache( IReadOnlyTextTranslationCache primary )
       {
          if( !_compositeCaches.TryGetValue( primary, out var compo ) )
@@ -236,6 +243,24 @@ namespace XUnity.AutoTranslator.Plugin.Core
                      XuaLogger.AutoTranslator.Error( e, "An error occurred while loading translations in file: " + fullFileName );
                   }
                }
+               // ----- START TODO: Add JSON loading here
+               foreach( var fullFileName in GetTranslationFiles().Except( new[] { mainTranslationFile, substitutionFile, preprocessorsFile, postprocessorsFile }, StringComparer.OrdinalIgnoreCase ) )
+               {
+                  try
+                  {
+                     if( _pluginDirectory == null && fullFileName.StartsWith( pluginsDir, StringComparison.OrdinalIgnoreCase ) )
+                     {
+                        continue;
+                     }
+
+                     LoadTranslationsInFile( fullFileName, false, true, AddTranslationSplitterRegex, AddTranslationRegex, AddTranslation );
+                  }
+                  catch( Exception e )
+                  {
+                     XuaLogger.AutoTranslator.Error( e, "An error occurred while loading translations in file: " + fullFileName );
+                  }
+               }
+               // ----- END TODO: Add JSON loading here
             }
 
             foreach( var streamPackages in _streamPackages )

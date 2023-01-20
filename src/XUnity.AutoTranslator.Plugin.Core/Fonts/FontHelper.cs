@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEngine;
 using XUnity.AutoTranslator.Plugin.Core.Configuration;
+using XUnity.AutoTranslator.Plugin.Core.Utilities;
 using XUnity.Common.Constants;
 using XUnity.Common.Logging;
 using XUnity.Common.Utilities;
@@ -11,6 +12,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
 {
    internal static class FontHelper
    {
+      public static string VN_CHARS = "ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹqwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
       public static UnityEngine.Object GetTextMeshProFont( string assetBundle )
       {
          UnityEngine.Object font = null;
@@ -18,7 +20,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
          var overrideFontPath = Path.Combine( Paths.GameRoot, assetBundle );
          if( File.Exists( overrideFontPath ) )
          {
-            XuaLogger.AutoTranslator.Info( "Attempting to load TextMesh Pro font from asset bundle." );
+            XuaLogger.AutoTranslator.Info( $"Attempting to load TextMesh Pro font from asset bundle {overrideFontPath}" );
 
             AssetBundle bundle = null;
             if( UnityTypes.AssetBundle_Methods.LoadFromFile != null )
@@ -66,8 +68,14 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
          else
          {
             XuaLogger.AutoTranslator.Info( "Attempting to load TextMesh Pro font from internal Resources API." );
-
-            font = Resources.Load( assetBundle );
+            try
+            {
+               font = Resources.Load( assetBundle );
+            }
+            catch(Exception ex)
+            {
+               XuaLogger.AutoTranslator.Warn( $"Resource failed. {ex.Message}" );
+            }
          }
 
          if( font != null )
@@ -85,7 +93,86 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
          }
          else
          {
-            XuaLogger.AutoTranslator.Error( "Could not find the TextMeshPro font asset: " + assetBundle );
+#if MANAGED
+            string ttfPath = overrideFontPath + ".ttf";
+            if( File.Exists(ttfPath))
+            {
+               try
+               {
+                  XuaLogger.AutoTranslator.Info( $"[MANAGED] Create font from {ttfPath}" );
+                  var ttfFont = new Font( ttfPath );
+                  var methodInfo = UnityTypes.TMP_FontAsset.ClrType.GetMethods()
+                     .Where( m => m.Name == "CreateFontAsset"
+                     && m.IsStatic
+                     && m.IsPublic
+                     && m.GetParameters().Length > 2 ).FirstOrDefault();
+                  if( methodInfo == null ) XuaLogger.AutoTranslator.Info( "Sheet method info TMP_FontAsset.CreateFontAsset is null" );
+                  var result = methodInfo.Invoke( null, new object[] { ttfFont, 60, 6, EnumHelper.GetValues( UnityTypes.GlyphRenderMode, "SDFAA" ), 2048, 2048, EnumHelper.GetValues( UnityTypes.AtlasPopulationMode, "Dynamic" ), true } );
+                  XuaLogger.AutoTranslator.Info( $"{result}" );
+                  font = (UnityEngine.Object)result;
+               }
+               catch(Exception ex)
+               {
+                  XuaLogger.AutoTranslator.Error( ex, "Cannot create TMP_FontAsset from Font");
+               }
+            }
+#endif
+#if IL2CPP
+            string ttfPath = overrideFontPath + ".ttf";
+            if( File.Exists(ttfPath))
+            {
+               try
+               {
+                  XuaLogger.AutoTranslator.Info( $"[IL2CPP] Create font for TMP_Pro from {ttfPath}" );
+                  Font ttfFont = new Font();
+                  Font.Internal_CreateFontFromPath(ttfFont, ttfPath);
+                  var methodInfo = UnityTypes.TMP_FontAsset.ClrType.GetMethods()
+                     .Where( m => m.Name == "CreateFontAsset"
+                     && m.IsStatic
+                     && m.IsPublic
+                     && m.GetParameters().Length > 2 ).FirstOrDefault();
+                  if( methodInfo == null ) XuaLogger.AutoTranslator.Info( "Sheet method info TMP_FontAsset.CreateFontAsset is null" );
+                  var result = methodInfo.Invoke( null, new object[] { ttfFont, 60, 6, EnumHelper.GetValues( UnityTypes.GlyphRenderMode, "SDFAA" ), 2048, 2048, EnumHelper.GetValues( UnityTypes.AtlasPopulationMode, "Dynamic" ), true } );
+                  var hasCharMethodInfo = UnityTypes.TMP_FontAsset.ClrType.GetMethods()
+                     .Where( m => m.Name == "HasCharacter"
+                     && m.IsPublic
+                     && m.GetParameters().Length > 2 ).FirstOrDefault();
+                  if( hasCharMethodInfo != null )
+                  {
+                     XuaLogger.AutoTranslator.Info( "HasCharacter is ready to work" );
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)12289, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65281, false,true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65288, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65289, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65292, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65306, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65307, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65311, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65374, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65280, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)65282, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)12298, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)12299, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)12290, false, true});
+                     hasCharMethodInfo.Invoke(result, new object[] {(char)12288, false, true});
+                     foreach(char ch in VN_CHARS.ToCharArray())
+                     {
+                        hasCharMethodInfo.Invoke(result, new object[] {ch, false, true});
+                     }
+                     
+                  }
+                  font = (UnityEngine.Object)result;
+               }
+               catch(Exception ex)
+               {
+                  XuaLogger.AutoTranslator.Error( ex, $"Cannot create TMP_FontAsset from Font {ttfPath}");
+               }
+            }
+#endif
+            if( font == null )
+            {
+               XuaLogger.AutoTranslator.Error( "Could not find the TextMeshPro font asset: " + assetBundle );
+            }
          }
 
          return font;
@@ -140,7 +227,22 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
 
       public static Font GetTextFont( int size )
       {
-         var font = Font.CreateDynamicFontFromOSFont( Settings.OverrideFont, size );
+         var fontPath = Path.Combine( Paths.GameRoot, Settings.OverrideFont ) + ".ttf";
+         Font font = null;
+         XuaLogger.AutoTranslator.Info( $"Create font from {fontPath}" );
+         if( File.Exists(fontPath))
+         {
+#if IL2CPP
+            font = new Font();
+            Font.Internal_CreateFontFromPath(font, fontPath);
+#else
+            font = new Font( fontPath );
+#endif
+         }
+         else
+         {
+            font = Font.CreateDynamicFontFromOSFont( Settings.OverrideFont, size );
+         }
          GameObject.DontDestroyOnLoad( font );
 
          return font;

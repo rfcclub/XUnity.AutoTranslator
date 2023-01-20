@@ -27,7 +27,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.AssetRedirection
       protected override bool DumpAsset( string calculatedModificationPath, TextAsset asset, IAssetOrResourceLoadedContext context )
       {
          Directory.CreateDirectory( new FileInfo( calculatedModificationPath ).Directory.FullName );
-
+         XuaLogger.ResourceRedirector.Info( $"Dumping file to {calculatedModificationPath}" );
          var bytes = asset.bytes;
          if( bytes != null )
          {
@@ -49,10 +49,11 @@ namespace XUnity.AutoTranslator.Plugin.Core.AssetRedirection
       protected override bool ReplaceOrUpdateAsset( string calculatedModificationPath, ref TextAsset asset, IAssetOrResourceLoadedContext context )
       {
          RedirectedResource file;
-
+         XuaLogger.ResourceRedirector.Info( $"Checking {calculatedModificationPath}" );
          var files = RedirectedDirectory.GetFile( calculatedModificationPath ).ToList();
          if( files.Count == 0 )
          {
+            XuaLogger.ResourceRedirector.Info( $"Cannot find any file at {calculatedModificationPath}" );
             return false;
          }
          else
@@ -67,6 +68,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.AssetRedirection
 
          if( file != null )
          {
+            XuaLogger.ResourceRedirector.Info( $"Read {calculatedModificationPath}" );
             using( var stream = file.OpenStream() )
             {
                var data = stream.ReadFully( (int)stream.Length );
@@ -74,7 +76,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.AssetRedirection
                var ext = asset.GetOrCreateExtensionData<TextAssetExtensionData>();
                ext.Encoding = Encoding.UTF8;
                ext.Data = data;
-
+               XuaLogger.ResourceRedirector.Info( $"Read successfully !!!" );
                return true;
             }
          }
