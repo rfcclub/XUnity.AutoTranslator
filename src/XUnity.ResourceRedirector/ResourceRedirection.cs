@@ -1311,13 +1311,13 @@ namespace XUnity.ResourceRedirector
 
       private static void LogEventRegistration( string eventType, IEnumerable callbacks )
       {
-         XuaLogger.ResourceRedirector.Debug( $"Registered new callback for {eventType}." );
+         XuaLogger.ResourceRedirector.Info( $"Registered new callback for {eventType}." );
          LogNewCallbackOrder( eventType, callbacks );
       }
 
       private static void LogEventUnregistration( string eventType, IEnumerable callbacks )
       {
-         XuaLogger.ResourceRedirector.Debug( $"Unregistered callback for {eventType}." );
+         XuaLogger.ResourceRedirector.Info( $"Unregistered callback for {eventType}." );
          LogNewCallbackOrder( eventType, callbacks );
       }
 

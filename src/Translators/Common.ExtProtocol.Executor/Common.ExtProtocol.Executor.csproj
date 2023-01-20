@@ -6,6 +6,13 @@
    </PropertyGroup>
 
    <ItemGroup>
+     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net45" Version="1.0.3">
+       <PrivateAssets>all</PrivateAssets>
+       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+     </PackageReference>
+   </ItemGroup>
+
+   <ItemGroup>
       <ProjectReference Include="..\..\XUnity.AutoTranslator.Plugin.ExtProtocol\XUnity.AutoTranslator.Plugin.ExtProtocol.csproj" />
       <ProjectReference Include="..\DeepLTranslate.ExtProtocol\DeepLTranslate.ExtProtocol.csproj" />
    </ItemGroup>
