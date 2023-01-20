@@ -225,8 +225,8 @@ namespace XUnity.ResourceRedirector.Hooks
 
       static MethodBase TargetMethod( object instance )
       {
-         return AccessToolsShim.Method( UnityTypes.AssetBundle?.ClrType, "LoadFromFileAsync_Internal", typeof( string ), typeof( uint ), typeof( ulong ) )
-            ?? AccessToolsShim.Method( UnityTypes.AssetBundle?.ClrType, "LoadFromFileAsync", typeof( string ), typeof( uint ), typeof( ulong ) );
+         return AccessToolsShim.Method( UnityTypes.AssetBundle?.ClrType, "LoadFromFileAsync", typeof( string ), typeof( uint ), typeof( ulong ) )
+            ?? AccessToolsShim.Method( UnityTypes.AssetBundle?.ClrType, "LoadFromFileAsync_Internal", typeof( string ), typeof( uint ), typeof( ulong ) );
       }
 
       static bool Prefix( ref string path, ref uint crc, ref ulong offset, ref AssetBundleCreateRequest __result, ref AsyncAssetBundleLoadingContext __state )

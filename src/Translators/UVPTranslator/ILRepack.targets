@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- ILRepack -->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <Target Name="ILRepacker" AfterTargets="Build">
+
+    <ItemGroup>
+       <InputAssemblies Include="$(OutputPath)/$(AssemblyName).dll" />
+       <InputAssemblies Include="$(OutputPath)/Newtonsoft.Json.dll" />
+	   <InputAssemblies Include="$(OutputPath)/INIFileParser.dll" />
+       <IlRepackLibs Include="$(OutputPath)" />
+       <IlRepackLibs Include="$(MsBuildThisFileDirectory)/../../Libs" />
+       <IlRepackLibs Include="$(MsBuildThisFileDirectory)/../../Libs/MelonMod06" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <!-- Must be a fully qualified name -->
+        <DoNotInternalizeAssemblies Include="MelonLoader, Version=0.6.0.0, Culture=neutral, PublicKeyToken=null" />
+    </ItemGroup>
+
+    <ILRepack
+        Parallel="true"
+        Internalize="true"
+        InternalizeExclude="@(DoNotInternalizeAssemblies)"
+        InputAssemblies="@(InputAssemblies)"
+        TargetKind="Dll"
+        LibraryPath="@(IlRepackLibs)"
+        OutputFile="$(OutputPath)\$(AssemblyName)-AIO.dll"
+        Verbose="true"
+    />
+    </Target>
+</Project>
+<!-- /ILRepack -->

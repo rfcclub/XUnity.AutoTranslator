@@ -133,6 +133,8 @@ namespace XUnity.Common.Constants
       public static readonly Type TextOverflowModes = FindClrType( "TMPro.TextOverflowModes" );
       public static readonly Type TextAlignmentOptions = FindClrType( "TMPro.TextAlignmentOptions" );
       public static readonly Type VerticalWrapMode = FindClrType( "UnityEngine.VerticalWrapMode" );
+      public static readonly Type GlyphRenderMode = FindClrType( "UnityEngine.TextCore.LowLevel.GlyphRenderMode" );
+      public static readonly Type AtlasPopulationMode = FindClrType( "TMPro.AtlasPopulationMode" );
 
       // Shimeji Engine
       public static readonly TypeContainer TextExpansion = FindType( "UnityEngine.UI.TextExpansion" );
@@ -259,6 +261,12 @@ namespace XUnity.Common.Constants
          public static CachedProperty FontSize = UnityTypes.Font?.ClrType.CachedProperty( "fontSize" );
       }
 
+      public static class TMP_FontAsset_Methods
+      {
+#if MANAGED
+         public static CachedMethod CreateFontAsset = UnityTypes.TMP_FontAsset?.ClrType.CachedMethod( "CreateFontAsset", typeof(Font), typeof(int), typeof(int), GlyphRenderMode, typeof( int ), typeof( int ),AtlasPopulationMode, typeof(bool));
+#endif
+      }
       public static class AssetBundle_Methods
       {
 #if MANAGED

@@ -38,6 +38,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.AssetRedirection
 
       private void Handle( IAssetOrResourceLoadedContext context )
       {
+         XuaLogger.AutoTranslator.Info( $"Handling: '{context.Asset.name}'." );
          if( context.Asset.TryCastTo<TAsset>( out var castedAsset ) && ShouldHandleAsset( castedAsset, context ) )
          {
             var unqiuePath = context.GetUniqueFileSystemAssetPath( castedAsset );
@@ -50,12 +51,12 @@ namespace XUnity.AutoTranslator.Plugin.Core.AssetRedirection
                   if( handled )
                   {
                      if( !Settings.EnableSilentMode )
-                        XuaLogger.AutoTranslator.Debug( $"Replaced or updated resource file: '{unqiuePath}'." );
+                        XuaLogger.AutoTranslator.Info( $"Replaced or updated resource file: '{unqiuePath}'." );
                   }
                   else
                   {
                      if( !Settings.EnableSilentMode )
-                        XuaLogger.AutoTranslator.Debug( $"Did not replace or update resource file: '{unqiuePath}'." );
+                        XuaLogger.AutoTranslator.Info( $"Did not replace or update resource file: '{unqiuePath}'." );
                   }
 
                   context.Complete(
@@ -74,12 +75,12 @@ namespace XUnity.AutoTranslator.Plugin.Core.AssetRedirection
                   if( handled )
                   {
                      if( !Settings.EnableSilentMode )
-                        XuaLogger.AutoTranslator.Debug( $"Dumped resource file: '{unqiuePath}'." );
+                        XuaLogger.AutoTranslator.Info( $"Dumped resource file: '{unqiuePath}'." );
                   }
                   else
                   {
                      if( !Settings.EnableSilentMode )
-                        XuaLogger.AutoTranslator.Debug( $"Did not dump resource file: '{unqiuePath}'." );
+                        XuaLogger.AutoTranslator.Info( $"Did not dump resource file: '{unqiuePath}'." );
                   }
 
                   context.Complete(

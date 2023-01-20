@@ -406,14 +406,31 @@ namespace XUnity.AutoTranslator.Plugin.Core
             if( !string.IsNullOrEmpty( Settings.OverrideFont ) )
             {
                var available = GetSupportedFonts();
-               if( available == null )
+               var fontPath = Path.Combine( Paths.GameRoot, Settings.OverrideFont ) + ".ttf";
+               XuaLogger.AutoTranslator.Warn( $"fontPath={fontPath}");
+               var notExistFontPath = !File.Exists( fontPath );
+               if( available == null)
                {
-                  XuaLogger.AutoTranslator.Warn( $"Unable to validate OverrideFont validity due to shimmed APIs." );
+                  if( notExistFontPath )
+                  {
+                     XuaLogger.AutoTranslator.Warn( $"Unable to validate OverrideFont validity due to shimmed APIs." );
+                  }
+                  else
+                  {
+                     _hasValidOverrideFont = true;
+                  }
                }
-               else if( !available.Contains( Settings.OverrideFont ) )
+               else if(!available.Contains( Settings.OverrideFont ))
                {
-                  XuaLogger.AutoTranslator.Error( $"The specified override font is not available. Available fonts: " + string.Join( ", ", available ) );
-                  Settings.OverrideFont = null;
+                  if( notExistFontPath )
+                  {
+                     XuaLogger.AutoTranslator.Error( $"The specified override font is not available. Available fonts: " + string.Join( ", ", available ) );
+                     Settings.OverrideFont = null;
+                  }
+                  else
+                  {
+                     _hasValidOverrideFont = true;
+                  }
                }
                else
                {
@@ -432,7 +449,7 @@ namespace XUnity.AutoTranslator.Plugin.Core
          }
          catch( Exception e )
          {
-            XuaLogger.AutoTranslator.Error( e, "An error occurred while checking supported fonts." );
+            XuaLogger.AutoTranslator.Error( e, "An error occurred while checking supported fonts." + e.Message );
          }
       }
 
@@ -444,7 +461,7 @@ namespace XUnity.AutoTranslator.Plugin.Core
          }
          catch( Exception e )
          {
-            XuaLogger.AutoTranslator.Error( e, "Unable to retrieve OS installed fonts." );
+            XuaLogger.AutoTranslator.Warn( e, "Unable to retrieve OS installed fonts." );
             return null;
          }
       }
@@ -552,7 +569,7 @@ namespace XUnity.AutoTranslator.Plugin.Core
       private void LoadTranslations( bool reload )
       {
          ResizeCache.LoadResizeCommandsInFiles();
-
+         XuaLogger.Common.Info( $"XUnity on - {Application.productName} : {Application.unityVersion}" );
          SettingsTranslationsInitializer.LoadTranslations();
          TextCache.LoadTranslationFiles();
 
