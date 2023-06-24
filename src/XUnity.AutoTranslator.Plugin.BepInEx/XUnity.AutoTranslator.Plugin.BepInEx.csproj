@@ -11,11 +11,41 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Reference Include="BepInEx">
-			<HintPath>..\..\libs\BepInEx 5.0\BepInEx.dll</HintPath>
+		<Reference Include="BepInEx.Core">
+		  <HintPath>..\..\libs\BepInEx 6.0\BepInEx.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="BepInEx.Preloader.Core">
+		  <HintPath>..\..\libs\BepInEx 6.0\BepInEx.Preloader.Core.dll</HintPath>
+		</Reference>
+		<Reference Include="BepInEx.Preloader.Unity">
+		  <HintPath>..\..\libs\BepInEx 6.0\BepInEx.Preloader.Unity.dll</HintPath>
+		</Reference>
+		<Reference Include="BepInEx.Unity">
+		  <HintPath>..\..\libs\BepInEx 6.0\BepInEx.Unity.dll</HintPath>
 		</Reference>
 		<Reference Include="ExIni">
 			<HintPath>..\..\libs\ExIni.dll</HintPath>
+		</Reference>
+		<Reference Include="Mono.Cecil">
+		  <HintPath>..\..\libs\BepInEx 6.0\Mono.Cecil.dll</HintPath>
+		</Reference>
+		<Reference Include="Mono.Cecil.Mdb">
+		  <HintPath>..\..\libs\BepInEx 6.0\Mono.Cecil.Mdb.dll</HintPath>
+		</Reference>
+		<Reference Include="Mono.Cecil.Pdb">
+		  <HintPath>..\..\libs\BepInEx 6.0\Mono.Cecil.Pdb.dll</HintPath>
+		</Reference>
+		<Reference Include="Mono.Cecil.Rocks">
+		  <HintPath>..\..\libs\BepInEx 6.0\Mono.Cecil.Rocks.dll</HintPath>
+		</Reference>
+		<Reference Include="MonoMod.RuntimeDetour">
+		  <HintPath>..\..\libs\BepInEx 6.0\MonoMod.RuntimeDetour.dll</HintPath>
+		</Reference>
+		<Reference Include="MonoMod.Utils">
+		  <HintPath>..\..\libs\BepInEx 6.0\MonoMod.Utils.dll</HintPath>
+		</Reference>
+		<Reference Include="SemanticVersioning">
+		  <HintPath>..\..\libs\BepInEx 6.0\SemanticVersioning.dll</HintPath>
 		</Reference>
 	</ItemGroup>
 

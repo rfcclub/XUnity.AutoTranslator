@@ -10,6 +10,9 @@ using XUnity.AutoTranslator.Plugin.Core.Constants;
 using XUnity.AutoTranslator.Plugin.Core.Web;
 using XUnity.Common.Constants;
 using XUnity.Common.Harmony;
+#if IL2CPPINTEROP
+using UnityEngine.Networking;
+#endif
 
 namespace XUnity.AutoTranslator.Plugin.Core.Endpoints.Www
 {
@@ -78,7 +81,11 @@ namespace XUnity.AutoTranslator.Plugin.Core.Endpoints.Www
       /// <returns></returns>
       protected WWW CreateWww( string address, byte[] data, Dictionary<string, string> headers )
       {
+#if IL2CPPINTEROP
+         return WWW.LoadFromCacheOrDownload( address, 0);
+#else
          return new WWW( address, data, headers );
+#endif
       }
 
       /// <summary>
@@ -104,7 +111,27 @@ namespace XUnity.AutoTranslator.Plugin.Core.Endpoints.Www
          var url = request.Address;
          var data = request.Data;
          var headers = request.Headers;
+#if IL2CPPINTEROP
+         // execute request
+         UnityWebRequest www = UnityWebRequest.Post(request.Address, request.Data);
+         foreach(var keyval in request.Headers)
+         {
+            www.SetRequestHeader(keyval.Key, keyval.Value);
+         }
+         yield return www.SendWebRequest();
 
+         if (www.result != UnityWebRequest.Result.Success)
+         {
+            wwwContext.Fail( "Error occurred while retrieving translation. " + www.error );
+         }
+         else
+         {
+            // extract text
+            var text = www.downloadHandler.text;
+            if( text == null ) wwwContext.Fail( "Error occurred while extracting text from response." );
+            wwwContext.ResponseData = text;
+         }
+#else
          // execute request
          var www = CreateWww( request.Address, data != null ? Encoding.UTF8.GetBytes( data ) : null, headers );
 
@@ -120,7 +147,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Endpoints.Www
          if( text == null ) wwwContext.Fail( "Error occurred while extracting text from response." ); 
 
          wwwContext.ResponseData = text;
-
+#endif
          // extract text
          OnExtractTranslation( wwwContext );
       }

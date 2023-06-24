@@ -21,7 +21,7 @@ namespace XUnity.AutoTranslator.Plugin.MelonMod
 {
    public class AutoTranslatorPlugin : MelonLoader.MelonMod
    {
-      public override void OnApplicationLateStart()
+      public override void OnApplicationStart()
       {
 #if IL2CPP
          var modFi = new FileInfo( Location );
@@ -29,8 +29,14 @@ namespace XUnity.AutoTranslator.Plugin.MelonMod
          var unhollowedPath = Path.Combine( gameDir.FullName, @"MelonLoader\Managed" );
          Il2CppProxyAssemblies.Location = unhollowedPath;
 #endif
-
+         LoggerInstance.Msg( "XUnity.AutoTranslator starting ...");
          PluginLoader.Load( false );
+         LoggerInstance.Msg( "XUnity.AutoTranslator loaded ..." );
+      }
+
+      public override void OnSceneWasLoaded( int buildIndex, string sceneName )
+      {
+         LoggerInstance.Warning( "XUnity.AutoTranslator OnSceneWasLoaded ..." + sceneName );
       }
    }
 }

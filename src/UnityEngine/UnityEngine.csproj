@@ -1,13 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
    <PropertyGroup>
-      <TargetFrameworks>net35;net472</TargetFrameworks>
+      <TargetFrameworks>net35;net472;net6.0</TargetFrameworks>
       <AssemblyVersion>0.0.0.0</AssemblyVersion>
       <WarningLevel>0</WarningLevel>
       <Optimize>false</Optimize>
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
    </PropertyGroup>
-
+	<PropertyGroup Condition="'$(TargetFramework)'=='net6.0'">
+		<DefineConstants>IL2CPPINTEROP</DefineConstants>
+	</PropertyGroup>
    <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
      <DefineConstants>IL2CPP</DefineConstants>
    </PropertyGroup>
@@ -27,5 +29,16 @@
          <HintPath>..\..\libs\Unhollower\UnhollowerRuntimeLib.dll</HintPath>
       </Reference>
    </ItemGroup>
+    <ItemGroup Condition="'$(TargetFramework)'=='net6.0'">
+	    <Reference Include="Il2CppInterop.Common.dll">
+		    <HintPath>..\..\libs\BepInEx6_BleedingEdge\Il2CppInterop.Common.dll</HintPath>
+	    </Reference>
+	    <Reference Include="Il2CppInterop.Runtime.dll">
+		    <HintPath>..\..\libs\BepInEx6_BleedingEdge\Il2CppInterop.Runtime.dll</HintPath>
+	    </Reference>
+	    <Reference Include="Il2Cppmscorlib">
+		    <HintPath>..\..\libs\BepInEx6_BleedingEdge\interop\Il2Cppmscorlib.dll</HintPath>
+	    </Reference>
+    </ItemGroup>
 
 </Project>

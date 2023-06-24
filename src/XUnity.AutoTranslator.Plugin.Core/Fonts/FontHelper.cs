@@ -7,12 +7,21 @@ using XUnity.AutoTranslator.Plugin.Core.Utilities;
 using XUnity.Common.Constants;
 using XUnity.Common.Logging;
 using XUnity.Common.Utilities;
+#if IL2CPP
+using UnhollowerBaseLib;
+using UnhollowerRuntimeLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Common;
+#endif
 
 namespace XUnity.AutoTranslator.Plugin.Core.Fonts
 {
    internal static class FontHelper
    {
-      public static string VN_CHARS = "ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳỵỷỹqwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
+      public static string VN_CHARS = "ÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỂẾưăạảấầẩẫậắằẳẵặẹẻẽềềểếệỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪễệỉịọỏốồổỗộớờởỡợụủứừỬỮỰỲỴÝỶỸửữựỳýỵỷỹqwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM0123456789";
       public static UnityEngine.Object GetTextMeshProFont( string assetBundle )
       {
          UnityEngine.Object font = null;
@@ -25,11 +34,23 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
             AssetBundle bundle = null;
             if( UnityTypes.AssetBundle_Methods.LoadFromFile != null )
             {
-               bundle = (AssetBundle)UnityTypes.AssetBundle_Methods.LoadFromFile.Invoke( null, new object[] { overrideFontPath } );
+               try
+               {
+                  bundle = (AssetBundle)UnityTypes.AssetBundle_Methods.LoadFromFile.Invoke( null, new object[] { overrideFontPath } );
+               }
+               finally
+               {
+               }
             }
             else if( UnityTypes.AssetBundle_Methods.CreateFromFile != null )
             {
-               bundle = (AssetBundle)UnityTypes.AssetBundle_Methods.CreateFromFile.Invoke( null, new object[] { overrideFontPath } );
+               try
+               {
+                  bundle = (AssetBundle)UnityTypes.AssetBundle_Methods.CreateFromFile.Invoke( null, new object[] { overrideFontPath } );
+               }
+               finally
+               {
+               }
             }
             else
             {
@@ -45,23 +66,30 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
 
             if( UnityTypes.TMP_FontAsset != null )
             {
-               if( UnityTypes.AssetBundle_Methods.LoadAllAssets != null )
+               try
                {
+                  if( UnityTypes.AssetBundle_Methods.LoadAllAssets != null )
+                  {
 #if MANAGED
-                  var assets = (UnityEngine.Object[])UnityTypes.AssetBundle_Methods.LoadAllAssets.Invoke( bundle, new object[] { UnityTypes.TMP_FontAsset.UnityType } );
+                     var assets = (UnityEngine.Object[])UnityTypes.AssetBundle_Methods.LoadAllAssets.Invoke( bundle, new object[] { UnityTypes.TMP_FontAsset.UnityType } );
 #else
-                  var assets = (UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object>)UnityTypes.AssetBundle_Methods.LoadAllAssets.Invoke( bundle, new object[] { UnityTypes.TMP_FontAsset.UnityType } );
+                  var assets = (Il2CppReferenceArray<UnityEngine.Object>)UnityTypes.AssetBundle_Methods.LoadAllAssets.Invoke( bundle, new object[] { UnityTypes.TMP_FontAsset.UnityType } );
 #endif
-                  font = assets?.FirstOrDefault();
+                     font = assets?.FirstOrDefault();
+                  }
+                  else if( UnityTypes.AssetBundle_Methods.LoadAll != null )
+                  {
+#if MANAGED
+                     var assets = (UnityEngine.Object[])UnityTypes.AssetBundle_Methods.LoadAll.Invoke( bundle, new object[] { UnityTypes.TMP_FontAsset.UnityType } );
+#else
+                  var assets = (Il2CppReferenceArray<UnityEngine.Object>)UnityTypes.AssetBundle_Methods.LoadAll.Invoke( bundle, new object[] { UnityTypes.TMP_FontAsset.UnityType } );
+#endif
+                     font = assets?.FirstOrDefault();
+                  }
                }
-               else if( UnityTypes.AssetBundle_Methods.LoadAll != null )
+               catch(Exception ex )
                {
-#if MANAGED
-                  var assets = (UnityEngine.Object[])UnityTypes.AssetBundle_Methods.LoadAll.Invoke( bundle, new object[] { UnityTypes.TMP_FontAsset.UnityType } );
-#else
-                  var assets = (UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object>)UnityTypes.AssetBundle_Methods.LoadAll.Invoke( bundle, new object[] { UnityTypes.TMP_FontAsset.UnityType } );
-#endif
-                  font = assets?.FirstOrDefault();
+                  XuaLogger.AutoTranslator.Error( ex.Message );
                }
             }
          }
@@ -117,7 +145,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
                }
             }
 #endif
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
             string ttfPath = overrideFontPath + ".ttf";
             if( File.Exists(ttfPath))
             {
@@ -178,7 +206,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
          return font;
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public static UnityEngine.Object GetTextMeshProFontByCustomProxies( string assetBundle )
       {
          UnityEngine.Object font = null;
@@ -232,7 +260,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Fonts
          XuaLogger.AutoTranslator.Info( $"Create font from {fontPath}" );
          if( File.Exists(fontPath))
          {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
             font = new Font();
             Font.Internal_CreateFontFromPath(font, fontPath);
 #else

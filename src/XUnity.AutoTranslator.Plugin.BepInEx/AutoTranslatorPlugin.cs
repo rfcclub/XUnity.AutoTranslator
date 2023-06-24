@@ -62,7 +62,14 @@ namespace XUnity.AutoTranslator.Plugin.BepInEx
 
       void Awake()
       {
-         PluginLoader.LoadWithConfig( this );
+         try
+         {
+            PluginLoader.LoadWithConfig( this );
+         }
+         catch ( Exception ex )
+         {
+            Logger.LogError( $"Plugin error !!!" + ex.Message);
+         }
       }
    }
 }

@@ -14,10 +14,10 @@
 
    <ItemGroup>
       <Reference Include="BepInEx.Core">
-         <HintPath>..\..\libs\BepInEx IL2CPP 6.0.0.291\BepInEx.Core.dll</HintPath>
+        <HintPath>..\..\libs\BepInEx IL2CPP60pre1\BepInEx.Core.dll</HintPath>
       </Reference>
       <Reference Include="BepInEx.IL2CPP">
-         <HintPath>..\..\libs\BepInEx IL2CPP 6.0.0.291\BepInEx.IL2CPP.dll</HintPath>
+        <HintPath>..\..\libs\BepInEx IL2CPP60pre1\BepInEx.IL2CPP.dll</HintPath>
       </Reference>
       <Reference Include="ExIni">
          <HintPath>..\..\libs\ExIni.dll</HintPath>

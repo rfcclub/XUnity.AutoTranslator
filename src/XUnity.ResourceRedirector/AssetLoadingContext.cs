@@ -1,6 +1,11 @@
 ﻿using System;
 using UnityEngine;
 using XUnity.Common.Utilities;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
 
 namespace XUnity.ResourceRedirector
 {
@@ -96,10 +101,12 @@ namespace XUnity.ResourceRedirector
       ///
       /// Consider using this if the load type is 'LoadByType' or 'LoadNamedWithSubAssets'.
       /// </summary>
-#if MANAGED
-      public UnityEngine.Object[] Assets { get => _backingField.Array; set => _backingField.Array = value; }
-#else
+#if IL2CPP
       public UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> Assets { get => _backingField.Array; set => _backingField.Array = value; }
+#elif IL2CPPINTEROP
+      public Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<UnityEngine.Object> Assets { get => _backingField.Array; set => _backingField.Array = value; }
+#else
+      public UnityEngine.Object[] Assets { get => _backingField.Array; set => _backingField.Array = value; }
 #endif
 
       /// <summary>

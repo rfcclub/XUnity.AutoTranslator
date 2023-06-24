@@ -5,6 +5,12 @@ using XUnity.Common.Extensions;
 
 #if IL2CPP
 using UnhollowerBaseLib;
+using UnhollowerRuntimeLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Common;
 #endif
 
 namespace XUnity.Common.Utilities
@@ -14,7 +20,7 @@ namespace XUnity.Common.Utilities
    /// </summary>
    public static class ExtensionDataHelper
    {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       private static readonly Dictionary<Il2CppObjectBase, object> DynamicFields = new Dictionary<Il2CppObjectBase, object>( UnityObjectReferenceComparer.Default );
 #endif
 
@@ -36,7 +42,7 @@ namespace XUnity.Common.Utilities
             lock( Sync )
             {
                return WeakDynamicFields.Count
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
                   + DynamicFields.Count
 #endif
                   ;
@@ -54,7 +60,7 @@ namespace XUnity.Common.Utilities
       {
          lock( Sync )
          {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
             if( obj is Il2CppObjectBase obj2 )
             {
                if( DynamicFields.TryGetValue( obj2, out object value ) )
@@ -114,7 +120,7 @@ namespace XUnity.Common.Utilities
 
          lock( Sync )
          {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
             if( obj is Il2CppObjectBase obj2 )
             {
                if( DynamicFields.TryGetValue( obj2, out object value ) )
@@ -209,7 +215,7 @@ namespace XUnity.Common.Utilities
 
          lock( Sync )
          {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
             if( obj is Il2CppObjectBase obj2 )
             {
                if( DynamicFields.TryGetValue( obj2, out object value ) )
@@ -283,7 +289,7 @@ namespace XUnity.Common.Utilities
          {
             WeakDynamicFields.RemoveCollectedEntries();
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
             List<Il2CppObjectBase> toRemove = null;
             foreach( var pair in DynamicFields )
             {
@@ -327,7 +333,7 @@ namespace XUnity.Common.Utilities
       {
          lock( Sync )
          {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
             if(obj is Il2CppObjectBase collectable)
             {
                DynamicFields.Remove( collectable );
@@ -357,7 +363,7 @@ namespace XUnity.Common.Utilities
             }
          }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          foreach( var kvp in DynamicFields )
          {
             if( kvp.Value is Dictionary<Type, object> dictionary )

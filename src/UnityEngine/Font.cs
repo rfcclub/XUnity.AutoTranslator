@@ -44,7 +44,7 @@ namespace UnityEngine
       {
          return new Font( fontnames, size );
       }
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public static extern void Internal_CreateFontFromPath( Font self, string fontPath );
       public static extern void Internal_CreateDynamicFont(Font self, string[] _names, int size);
 #endif

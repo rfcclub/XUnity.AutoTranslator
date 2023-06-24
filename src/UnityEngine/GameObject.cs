@@ -10,6 +10,10 @@ using UnityEngine.SceneManagement;
 
 #if IL2CPP
 using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
 #endif
 
 namespace UnityEngine
@@ -110,7 +114,7 @@ namespace UnityEngine
 
 
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public extern Component GetComponent( Il2CppSystem.Type type );
 #else
       public extern Component GetComponent( Type type );
@@ -168,7 +172,7 @@ namespace UnityEngine
          return (Component[])GetComponentsInternal_Renamed( type, useSearchTypeAsArrayReturnType: false, recursive: false, includeInactive: true, reverse: false, null );
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public Il2CppArrayBase<T> GetComponents<T>() => throw new NotImplementedException();
 #else
       public T[] GetComponents<T>() => throw new NotImplementedException();
@@ -184,7 +188,7 @@ namespace UnityEngine
          GetComponentsInternal_Renamed( typeof( T ), useSearchTypeAsArrayReturnType: false, recursive: false, includeInactive: true, reverse: false, results );
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public Il2CppReferenceArray<Component> GetComponentsInChildren( Il2CppSystem.Type type ) => throw new NotImplementedException();
       public Il2CppReferenceArray<Component> GetComponentsInChildren( Il2CppSystem.Type type, bool includeInactive ) => throw new NotImplementedException();
 #else

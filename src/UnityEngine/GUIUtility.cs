@@ -112,7 +112,7 @@ namespace UnityEngine
          return Internal_GetNextControlID2( contents.hash, focus, position );
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public static object GetStateObject( Il2CppSystem.Type t, int controlID ) => throw new NotImplementedException();
 #else
       public static object GetStateObject( Type t, int controlID ) => throw new NotImplementedException();

@@ -13,6 +13,15 @@ using XUnity.Common.Constants;
 using XUnity.Common.Harmony;
 using XUnity.Common.MonoMod;
 using XUnity.Common.Utilities;
+#if IL2CPP
+using UnhollowerBaseLib;
+using UnhollowerRuntimeLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Common;
+#endif
 
 namespace XUnity.AutoTranslator.Plugin.Core.Hooks.TextMeshPro
 {
@@ -163,7 +172,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks.TextMeshPro
 
       static void Postfix( Component __instance )
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          __instance = (Component)Il2CppUtilities.CreateProxyComponentWithDerivedType( __instance.Pointer, UnityTypes.TMP_Text.ClrType );
 #endif
 
@@ -272,7 +281,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks.TextMeshPro
 #if MANAGED
          return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( char[] ) } );
 #else
-         return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( UnhollowerBaseLib.Il2CppStructArray<char> ) } );
+         return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( Il2CppStructArray<char> ) } );
 #endif
       }
 
@@ -311,7 +320,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks.TextMeshPro
 #if MANAGED
          return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( char[] ), typeof( int ), typeof( int ) } );
 #else
-         return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( UnhollowerBaseLib.Il2CppStructArray<char> ), typeof( int ), typeof( int ) } );
+         return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( Il2CppStructArray<char> ), typeof( int ), typeof( int ) } );
 #endif
       }
 
@@ -350,7 +359,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks.TextMeshPro
 #if MANAGED
          return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( int[] ), typeof( int ), typeof( int ) } );
 #else
-         return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( UnhollowerBaseLib.Il2CppStructArray<int> ), typeof( int ), typeof( int ) } );
+         return AccessToolsShim.Method( UnityTypes.TMP_Text?.ClrType, "SetCharArray", new[] { typeof( Il2CppStructArray<int> ), typeof( int ), typeof( int ) } );
 #endif
       }
 
@@ -396,14 +405,14 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks.TextMeshPro
 
       static void Postfix( Component __instance )
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          __instance = (Component)Il2CppUtilities.CreateProxyComponentWithDerivedType( __instance.Pointer, UnityTypes.TextMeshProUGUI.ClrType );
 #endif
 
          _Postfix( __instance );
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       static IntPtr TargetMethodPointer()
       {
          return UnityTypes.TextMeshProUGUI_Methods.IL2CPP.OnEnable;
@@ -455,14 +464,14 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks.TextMeshPro
 
       static void Postfix( Component __instance )
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          __instance = (Component)Il2CppUtilities.CreateProxyComponentWithDerivedType( __instance.Pointer, UnityTypes.TextMeshPro.ClrType );
 #endif
 
          _Postfix( __instance );
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       static IntPtr TargetMethodPointer()
       {
          return UnityTypes.TextMeshPro_Methods.IL2CPP.OnEnable;
@@ -514,14 +523,14 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks.TextMeshPro
 
       static void Postfix( Component __instance )
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          __instance = __instance.CreateTextMeshProDerivedProxy();
 #endif
 
          _Postfix( __instance );
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       static IntPtr TargetMethodPointer()
       {
          return UnityTypes.TMP_Text_Methods.IL2CPP.set_text;

@@ -7,6 +7,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
 
 namespace UnityEngine
 {
@@ -218,8 +225,8 @@ namespace UnityEngine
          DoLabel( GUIContent.Temp( image ), style, options );
       }
 
-#if IL2CPP
-      public static void Label( string text, GUIStyle style, UnhollowerBaseLib.Il2CppReferenceArray<GUILayoutOption> options )
+#if IL2CPP || IL2CPPINTEROP
+      public static void Label( string text, GUIStyle style, Il2CppReferenceArray<GUILayoutOption> options )
 #else
       public static void Label( string text, GUIStyle style, params GUILayoutOption[] options )
 #endif
@@ -291,8 +298,8 @@ namespace UnityEngine
          return DoButton( GUIContent.Temp( text ), style, options );
       }
 
-#if IL2CPP
-      public static bool Button( GUIContent content, GUIStyle style, UnhollowerBaseLib.Il2CppReferenceArray<GUILayoutOption> options ) => throw new NotImplementedException();
+#if IL2CPP || IL2CPPINTEROP
+      public static bool Button( GUIContent content, GUIStyle style, Il2CppReferenceArray<GUILayoutOption> options ) => throw new NotImplementedException();
 #else
       public static bool Button( GUIContent content, GUIStyle style, params GUILayoutOption[] options ) => throw new NotImplementedException();
 #endif

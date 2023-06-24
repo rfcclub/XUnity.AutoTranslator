@@ -10,6 +10,11 @@ using XUnity.Common.Utilities;
 #if IL2CPP
 using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Common;
 #endif
 
 
@@ -17,16 +22,16 @@ namespace XUnity.Common.Extensions
 {
    public static class ObjectExtensions
    {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       private static readonly IntPtr GetIl2CppType;
 
       static ObjectExtensions()
       {
-         GetIl2CppType = UnhollowerBaseLib.IL2CPP.GetIl2CppMethod(
+         GetIl2CppType = IL2CPP.GetIl2CppMethod(
                Il2CppClassPointerStore<Il2CppSystem.Object>.NativeClassPtr,
                false,
                "GetType",
-               UnhollowerBaseLib.IL2CPP.RenderTypeName<Type>() );
+                  IL2CPP.RenderTypeName<Type>() );
 
       }
 
@@ -34,12 +39,12 @@ namespace XUnity.Common.Extensions
       {
          if( that is Il2CppObjectBase obj )
          {
-            UnhollowerBaseLib.IL2CPP.Il2CppObjectBaseToPtrNotNull( obj );
+               IL2CPP.Il2CppObjectBaseToPtrNotNull( obj );
             System.IntPtr* param = null;
             System.IntPtr exc = IntPtr.Zero;
-            System.IntPtr intPtr = UnhollowerBaseLib.IL2CPP.il2cpp_runtime_invoke(
+            System.IntPtr intPtr = IL2CPP.il2cpp_runtime_invoke(
                GetIl2CppType,
-               UnhollowerBaseLib.IL2CPP.Il2CppObjectBaseToPtrNotNull( obj ),
+                  IL2CPP.Il2CppObjectBaseToPtrNotNull( obj ),
                (void**)param,
                ref exc );
             Il2CppException.RaiseExceptionIfNecessary( exc );
@@ -80,7 +85,7 @@ namespace XUnity.Common.Extensions
             return true;
          }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          if( obj is Il2CppObjectBase il2cppObject )
          {
             IntPtr nativeClassPtr = Il2CppClassPointerStore<TObject>.NativeClassPtr;
@@ -98,7 +103,11 @@ namespace XUnity.Common.Extensions
             }
             if( RuntimeSpecificsStore.IsInjected( intPtr ) )
             {
+#if IL2CPP
                castedObject = (TObject)UnhollowerBaseLib.Runtime.ClassInjectorBase.GetMonoObjectFromIl2CppPointer( instancePointer );
+#else
+               castedObject = (TObject)Il2CppInterop.Runtime.Runtime.ClassInjectorBase.GetMonoObjectFromIl2CppPointer( instancePointer );
+#endif
                return castedObject != null;
             }
 
@@ -111,7 +120,7 @@ namespace XUnity.Common.Extensions
          return false;
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public static bool IsInstancePointerAssignableFrom( this IntPtr instancePointer, IntPtr classPointer )
       {
          IntPtr intPtr = IL2CPP.il2cpp_object_get_class( instancePointer );

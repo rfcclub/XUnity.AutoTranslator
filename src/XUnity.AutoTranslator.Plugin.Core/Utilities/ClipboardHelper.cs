@@ -9,7 +9,13 @@ using XUnity.Common.Logging;
 using XUnity.Common.Utilities;
 
 #if IL2CPP
+using UnhollowerBaseLib;
 using UnhollowerRuntimeLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Common;
 #endif
 
 namespace XUnity.AutoTranslator.Plugin.Core.Utilities
@@ -45,10 +51,12 @@ namespace XUnity.AutoTranslator.Plugin.Core.Utilities
       {
          try
          {
-#if MANAGED
-            TextEditor editor = (TextEditor)GUIUtility.GetStateObject( typeof( TextEditor ), GUIUtility.keyboardControl );
-#else
+#if IL2CPP
             TextEditor editor = (TextEditor)GUIUtility.GetStateObject( Il2CppType.Of<TextEditor>(), GUIUtility.keyboardControl );
+#elif IL2CPPINTEROP
+            TextEditor editor = (TextEditor)GUIUtility.GetStateObject( Il2CppType.Of<TextEditor>(), GUIUtility.keyboardControl );
+#else
+            TextEditor editor = (TextEditor)GUIUtility.GetStateObject( typeof( TextEditor ), GUIUtility.keyboardControl );
 #endif
             editor.text = text;
             editor.SelectAll();

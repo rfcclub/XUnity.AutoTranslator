@@ -7,6 +7,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Fields;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
 
 namespace UnityEngine
 {
@@ -62,8 +69,8 @@ namespace UnityEngine
          return LoadFromMemoryAsync( binary, crc );
       }
 
-#if IL2CPP
-      public static extern AssetBundle LoadFromMemory( UnhollowerBaseLib.Il2CppStructArray<byte> binary, uint crc );
+#if IL2CPP || IL2CPPINTEROP
+      public static extern AssetBundle LoadFromMemory( Il2CppStructArray<byte> binary, uint crc );
 #else
       public static extern AssetBundle LoadFromMemory( byte[] binary, uint crc );
 #endif

@@ -35,9 +35,16 @@ namespace XUnity.AutoTranslator.Plugin.Core
 
       private static void TestReflectionEmit()
       {
+#if IL2CPP || MANAGED
          MethodToken t1 = default( MethodToken );
          MethodToken t2 = default( MethodToken );
+         
          var ok = t1 == t2;
+#endif
+#if IL2CPPINTEROP
+         // do nothing .NET 6 support System.Reflection.Emit
+#endif
+
       }
    }
 }

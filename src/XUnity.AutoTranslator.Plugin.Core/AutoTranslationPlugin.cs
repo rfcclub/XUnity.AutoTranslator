@@ -3507,7 +3507,7 @@ namespace XUnity.AutoTranslator.Plugin.Core
             var layer =
 #if MANAGED
                LayerMask.LayerToName( obj.layer );
-#elif IL2CPP
+#elif IL2CPP || IL2CPPINTEROP
                obj.layer.ToString();
 #endif
             var components = string.Join( ", ", obj.GetComponents<Component>().Select( x =>

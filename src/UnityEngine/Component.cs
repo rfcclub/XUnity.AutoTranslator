@@ -7,6 +7,13 @@ using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Fields;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
 
 namespace UnityEngine
 {
@@ -24,7 +31,7 @@ namespace UnityEngine
          set => throw new NotImplementedException();
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public Component GetComponent( Il2CppSystem.Type type ) => throw new NotImplementedException();
 #else
       public Component GetComponent( Type type ) => throw new NotImplementedException();

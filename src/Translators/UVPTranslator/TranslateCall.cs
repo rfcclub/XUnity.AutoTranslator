@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using XUnity.AutoTranslator.Plugin.Core.Shims;
 
 namespace UVPTranslator
@@ -18,10 +19,8 @@ namespace UVPTranslator
         }
         public void Run()
         {
-            BackgroundWorker worker = new BackgroundWorker();
-            worker.DoWork += Worker_DoWork;
-            worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
-            worker.RunWorkerAsync();
+            Thread worker = new Thread(Worker_DoWork);
+            worker.Start();
         }
         public string[] GetResult()
         {
@@ -32,7 +31,7 @@ namespace UVPTranslator
             isCompleted = true;
         }
 
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        private void Worker_DoWork()
         {
             foreach (string input in untranslated)
             {
@@ -43,6 +42,7 @@ namespace UVPTranslator
                 }
                 result.Add(translated);
             }
+            isCompleted = true;
         }
 
         public override bool keepWaiting => !isCompleted;

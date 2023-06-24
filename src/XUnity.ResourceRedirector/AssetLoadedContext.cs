@@ -5,6 +5,11 @@ using System.IO;
 using UnityEngine;
 using XUnity.Common.Extensions;
 using XUnity.Common.Utilities;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
 
 namespace XUnity.ResourceRedirector
 {
@@ -17,10 +22,12 @@ namespace XUnity.ResourceRedirector
       private bool _lookedForExt = false;
       private BackingFieldOrArray _backingField;
 
-#if MANAGED
-      internal AssetLoadedContext( AssetLoadedParameters parameters, AssetBundle bundle, UnityEngine.Object[] assets )
-#else
-      internal AssetLoadedContext( AssetLoadedParameters parameters, AssetBundle bundle, UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> assets )
+#if IL2CPP
+      internal AssetLoadedContext( AssetLoadedParameters parameters, AssetBundle bundle, Il2CppReferenceArray<UnityEngine.Object> assets )
+#elif IL2CPPINTEROP
+      internal AssetLoadedContext( AssetLoadedParameters parameters, AssetBundle bundle, Il2CppReferenceArray<UnityEngine.Object> assets )
+#else 
+      internal AssetLoadedContext( AssetLoadedParameters parameters, AssetBundle bundle, UnityEngine.Object[] assets ) 
 #endif
       {
          Parameters = parameters;
@@ -166,10 +173,36 @@ namespace XUnity.ResourceRedirector
       ///
       /// Consider using this if the load type is 'LoadByType' or 'LoadNamedWithSubAssets' and you subscribed with 'OneCallbackPerLoadCall'.
       /// </summary>
-#if MANAGED
-      public UnityEngine.Object[] Assets { get => _backingField.Array; set => _backingField.Array = value; }
+#if IL2CPP
+      public UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> Assets
+      {
+         get
+         {
+            return _backingField.Array;
+         }
+         set
+         {
+            _backingField.Array = value;
+         }
+      }
+#elif IL2CPPINTEROP
+      public Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<UnityEngine.Object> Assets
+      {
+         get
+         {
+            return _backingField.Array;
+         }
+         set
+         {
+            _backingField.Array = value;
+         }
+      }
 #else
-      public UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> Assets { get => _backingField.Array; set => _backingField.Array = value; }
+      public UnityEngine.Object[] Assets
+      {
+         get => _backingField.Array;
+         set => _backingField.Array = value;
+      }
 #endif
 
 

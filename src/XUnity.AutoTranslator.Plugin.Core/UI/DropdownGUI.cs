@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using XUnity.Common.Logging;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Runtime.InteropTypes.Fields;
+using Il2CppInterop.Common;
+#endif
 
 namespace XUnity.AutoTranslator.Plugin.Core.UI
 {
@@ -92,17 +101,21 @@ namespace XUnity.AutoTranslator.Plugin.Core.UI
          }
 
          var style = _viewModel.CurrentSelection == null ? GUIUtil.NoMarginButtonPressedStyle : GUIUtil.NoMarginButtonStyle;
-         if( GUILayout.Button( _unselect, style, null ) )
+#if MANAGED
+         GUILayoutOption[] nullOptions = null;
+#else
+         Il2CppReferenceArray<GUILayoutOption> nullOptions = null;
+#endif
+         if( GUILayout.Button( _unselect, style, nullOptions ) )
          {
             _viewModel.Select( null );
             _isShown = false;
          }
-
          foreach( var option in _viewModel.Options )
          {
             style = option.IsSelected() ? GUIUtil.NoMarginButtonPressedStyle : GUIUtil.NoMarginButtonStyle;
             GUI.enabled = option?.IsEnabled() ?? true;
-            if( GUILayout.Button( option.Text, style, null ) )
+            if( GUILayout.Button( option.Text, style, nullOptions ) )
             {
                _viewModel.Select( option );
                _isShown = false;

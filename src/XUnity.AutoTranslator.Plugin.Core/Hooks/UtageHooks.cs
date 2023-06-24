@@ -112,7 +112,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks
 
       static void Postfix( Component __instance )
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          __instance = (Component)Il2CppUtilities.CreateProxyComponentWithDerivedType( __instance.Pointer, UnityTypes.TextArea2D.ClrType );
 #endif
 
@@ -156,7 +156,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks
 
       static void Postfix( Component __instance )
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          __instance = (Component)Il2CppUtilities.CreateProxyComponentWithDerivedType( __instance.Pointer, UnityTypes.TextArea2D.ClrType );
 #endif
 

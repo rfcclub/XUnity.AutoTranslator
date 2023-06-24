@@ -75,7 +75,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.UI
 
       public static GUIStyle CopyStyle( GUIStyle other, Action<GUIStyle> setProperties )
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          return CopyWithPropertiesSafe( other, setProperties );
 #else
          var style = new GUIStyle( other );
@@ -84,7 +84,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.UI
 #endif
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       private static bool _hasCtor = true;
       
       public static GUIStyle CopyWithPropertiesSafe( GUIStyle other, Action<GUIStyle> setProperties )
@@ -126,7 +126,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.UI
 
       public static GUIContent CreateContent( string text, string tooltip )
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          return new GUIContent( text, null, tooltip );
 #else
          return new GUIContent( text, tooltip );

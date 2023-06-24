@@ -7,11 +7,18 @@ using System.Runtime.InteropServices;
 using System.Text;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
 
 namespace UnityEngine
 {
-#if IL2CPP
-   public sealed class GUILayoutOption : UnhollowerBaseLib.Il2CppObjectBase
+#if IL2CPP || IL2CPPINTEROP
+   public sealed class GUILayoutOption : Il2CppObjectBase
 #else
    public sealed class GUILayoutOption
 #endif
@@ -40,11 +47,13 @@ namespace UnityEngine
 
 #if IL2CPP
       internal GUILayoutOption( Type type, object value ) : base( IntPtr.Zero ) => throw new NotImplementedException();
+#elif IL2CPPINTEROP
+      internal GUILayoutOption( Type type, object value ) : base( IntPtr.Zero ) => throw new NotImplementedException();
 #else
       internal GUILayoutOption( Type type, object value ) => throw new NotImplementedException();
 #endif
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public GUILayoutOption( IntPtr pointer ) : base( pointer ) => throw new NotImplementedException();
 #endif
    }

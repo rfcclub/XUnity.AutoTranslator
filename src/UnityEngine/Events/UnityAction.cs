@@ -7,13 +7,20 @@ using System.Text;
 using UnhollowerBaseLib;
 using UnhollowerBaseLib.Attributes;
 using UnhollowerRuntimeLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Fields;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Runtime.Attributes;
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Common.Attributes;
 #endif
 
 namespace UnityEngine.Events
 {
    public delegate void UnityAction<T0>( T0 arg0 );
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
    public sealed class UnityAction<T0, T1> : Il2CppSystem.MulticastDelegate
    {
       private static readonly System.IntPtr NativeMethodInfoPtr_Method_Public_Void_Object_IntPtr_0;

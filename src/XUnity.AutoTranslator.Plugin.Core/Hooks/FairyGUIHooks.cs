@@ -7,6 +7,15 @@ using XUnity.Common.Constants;
 using XUnity.Common.Harmony;
 using XUnity.Common.MonoMod;
 using XUnity.Common.Utilities;
+#if IL2CPP
+using UnhollowerBaseLib;
+using UnhollowerRuntimeLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Common;
+#endif
 
 namespace XUnity.AutoTranslator.Plugin.Core.Hooks
 {
@@ -34,10 +43,10 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks
 #if MANAGED
       static void Postfix( object __instance )
 #else
-      static void Postfix( UnhollowerBaseLib.Il2CppObjectBase __instance )
+      static void Postfix( Il2CppObjectBase __instance )
 #endif
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          __instance = Il2CppUtilities.CreateProxyComponentWithDerivedType( __instance.Pointer, UnityTypes.TextField.ClrType );
 #endif
 
@@ -78,10 +87,10 @@ namespace XUnity.AutoTranslator.Plugin.Core.Hooks
 #if MANAGED
       static void Postfix( object __instance )
 #else
-      static void Postfix( UnhollowerBaseLib.Il2CppObjectBase __instance )
+      static void Postfix( Il2CppObjectBase __instance )
 #endif
       {
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
          __instance = Il2CppUtilities.CreateProxyComponentWithDerivedType( __instance.Pointer, UnityTypes.TextField.ClrType );
 #endif
 

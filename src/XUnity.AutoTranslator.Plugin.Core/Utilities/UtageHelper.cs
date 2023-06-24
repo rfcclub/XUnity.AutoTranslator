@@ -9,6 +9,13 @@ using XUnity.Common.Constants;
 using XUnity.Common.Extensions;
 using XUnity.Common.Logging;
 using XUnity.Common.Utilities;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
 
 namespace XUnity.AutoTranslator.Plugin.Core.Utilities
 {
@@ -25,14 +32,14 @@ namespace XUnity.AutoTranslator.Plugin.Core.Utilities
             try
             {
                AdvManager = GameObject.FindObjectOfType( UnityTypes.AdvDataManager.UnityType );
-#if IL2CPP
-               AdvManager = Il2CppUtilities.CreateProxyComponentWithDerivedType( ( (UnhollowerBaseLib.Il2CppObjectBase)AdvManager ).Pointer, UnityTypes.AdvDataManager.ClrType );
+#if IL2CPP || IL2CPPINTEROP
+               AdvManager = Il2CppUtilities.CreateProxyComponentWithDerivedType( ( (Il2CppObjectBase)AdvManager ).Pointer, UnityTypes.AdvDataManager.ClrType );
 #endif
 
                var ScenarioDataTblProperty = UnityTypes.AdvDataManager.ClrType.GetProperty( "ScenarioDataTbl" );
                var ScenarioDataTbl = ScenarioDataTblProperty.GetValue( AdvManager, empty );
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
                var iterable1 = new ManagedDictionaryEnumerable( ScenarioDataTbl );
 #else
                ScenarioDataTbl.TryCastTo<IEnumerable>( out var iterable1 );
@@ -56,7 +63,7 @@ namespace XUnity.AutoTranslator.Plugin.Core.Utilities
 
                      var labelToAdvScenarioLabelData = ScenarioLabelsProperty.GetValue( AdvScenarioData, empty );
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
                      var iterable2 = new ManagedDictionaryEnumerable( labelToAdvScenarioLabelData );
 #else
                      labelToAdvScenarioLabelData.TryCastTo<IEnumerable>( out var iterable2 );

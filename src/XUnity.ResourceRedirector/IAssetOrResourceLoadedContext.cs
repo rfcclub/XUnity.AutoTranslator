@@ -1,4 +1,10 @@
-﻿namespace XUnity.ResourceRedirector
+﻿#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
+
+namespace XUnity.ResourceRedirector
 {
    /// <summary>
    /// Shared interface between AssetLoadedContext and ResourceLoadedContext.
@@ -20,10 +26,12 @@
       /// <summary>
       /// Gets the loaded assets. Override individual indices to change the asset reference that will be loaded.
       /// </summary>
-#if MANAGED
-      UnityEngine.Object[] Assets { get; set; }
+#if IL2CPP
+      UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> Assets { get; set; } 
+#elif IL2CPPINTEROP
+      Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<UnityEngine.Object> Assets { get; set; }
 #else
-      UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> Assets { get; set; }
+      UnityEngine.Object[] Assets { get; set; }
 #endif
 
       /// <summary>

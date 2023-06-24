@@ -3,6 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Runtime.InteropTypes.Fields;
+using Il2CppInterop.Common;
+#endif
 
 namespace XUnity.AutoTranslator.Plugin.Core.UI
 {
@@ -208,10 +217,14 @@ namespace XUnity.AutoTranslator.Plugin.Core.UI
          float boxHeight = _viewModel.Height - GUIUtil.LabelHeight;
          GUILayout.BeginArea( GUIUtil.R( GUIUtil.HalfComponentSpacing, posy, boxWidth, boxHeight ) );
          positioned.ScrollPosition = GUILayout.BeginScrollView( positioned.ScrollPosition, GUI.skin.box );
-
+#if MANAGED
+         GUILayoutOption[] nullOptions = null;
+#else
+         Il2CppReferenceArray<GUILayoutOption> nullOptions = null;
+#endif
          foreach( var text in texts )
          {
-            GUILayout.Label( text, GUIUtil.LabelTranslation, null );
+            GUILayout.Label( text, GUIUtil.LabelTranslation, nullOptions );
          }
 
          GUILayout.EndScrollView();

@@ -18,7 +18,7 @@ namespace UnityEngine.SceneManagement
          get;
       }
 
-#if IL2CPP
+#if IL2CPP || IL2CPPINTEROP
       public static unsafe UnityAction<Scene, LoadSceneMode> sceneLoaded
       {
          get => throw new NotImplementedException();

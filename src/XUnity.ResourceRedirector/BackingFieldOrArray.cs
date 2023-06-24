@@ -1,14 +1,22 @@
 ﻿using System.Collections.Generic;
+using UnityEngine;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+#endif
 
 namespace XUnity.ResourceRedirector
 {
    internal struct BackingFieldOrArray
    {
       private UnityEngine.Object _field;
-#if MANAGED
-      private UnityEngine.Object[] _array;
-#else
+#if IL2CPP
       private UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> _array;
+#elif IL2CPPINTEROP
+      private Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<UnityEngine.Object> _array;
+#else
+      private UnityEngine.Object[] _array;
 #endif
       private BackingSource _source;
 
@@ -19,10 +27,12 @@ namespace XUnity.ResourceRedirector
          _source = BackingSource.SingleField;
       }
 
-#if MANAGED
-      public BackingFieldOrArray( UnityEngine.Object[] array )
-#else
+#if IL2CPP
       public BackingFieldOrArray( UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> array )
+#elif IL2CPPINTEROP
+      public BackingFieldOrArray( Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<UnityEngine.Object> array )
+#else
+      public BackingFieldOrArray( UnityEngine.Object[] array )
 #endif
       {
          _field = null;
@@ -55,10 +65,12 @@ namespace XUnity.ResourceRedirector
          }
       }
 
-#if MANAGED
-      public UnityEngine.Object[] Array
-#else
+#if IL2CPP
       public UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> Array
+#elif IL2CPPINTEROP
+      public Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<UnityEngine.Object> Array
+#else
+      public UnityEngine.Object[] Array
 #endif
       {
          get
@@ -70,15 +82,28 @@ namespace XUnity.ResourceRedirector
             else
             {
                // create an empty array if None is correct
+#if IL2CPP
+               _array = new Il2CppReferenceArray<UnityEngine.Object>(0);
+               if (_field != null) {
+                  _array = new Il2CppReferenceArray<UnityEngine.Object>(1);
+                  _array[0] = _field;
+               }
+#elif IL2CPPINTEROP
+               _array = new Il2CppReferenceArray<UnityEngine.Object>(0);
+               if (_field != null) {
+                  _array = new Il2CppReferenceArray<UnityEngine.Object>(1);
+                  _array[0] = _field;
+               }
+#else
                if( _field == null )
                {
-                  Array = new UnityEngine.Object[ 0 ];
+                  _array = new UnityEngine.Object[ 0 ];
                }
                else
                {
-                  Array = new UnityEngine.Object[ 1 ] { _field };
+                  _array = new UnityEngine.Object[ 1 ] { _field };
                }
-
+#endif
                return _array;
             }
          }

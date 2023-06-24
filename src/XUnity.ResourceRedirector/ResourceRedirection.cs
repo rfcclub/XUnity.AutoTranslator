@@ -11,6 +11,15 @@ using XUnity.Common.Extensions;
 using XUnity.Common.Logging;
 using XUnity.Common.Utilities;
 using XUnity.ResourceRedirector.Hooks;
+#if IL2CPP
+using UnhollowerBaseLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Fields;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Common;
+using Il2CppInterop.Runtime;
+#endif
 
 namespace XUnity.ResourceRedirector
 {
@@ -753,8 +762,13 @@ namespace XUnity.ResourceRedirector
          }
          else if( context.ResolveType == AsyncAssetBundleLoadingResolve.ThroughBundle )
          {
+#if IL2CPPINTEROP
+            // simply create a dummy request object
+            request = new AssetBundleCreateRequest(IL2CPP.il2cpp_alloc((uint)System.Runtime.InteropServices.Marshal.SizeOf(typeof(AssetBundleCreateRequest)))); // is this even legal?
+#else
             // simply create a dummy request object
             request = new AssetBundleCreateRequest(); // is this even legal?
+#endif
             if( !context.SkipOriginalCall )
             {
                XuaLogger.ResourceRedirector.Warn( "Resolving sync over async asset load, but 'SkipOriginalCall' was not set to true. Forcing it to true." );
@@ -796,10 +810,12 @@ namespace XUnity.ResourceRedirector
 
       internal static AssetLoadingContext Hook_AssetLoading_Prefix( AssetLoadingParameters parameters, AssetBundle parentBundle, ref UnityEngine.Object asset )
       {
-#if MANAGED
-         UnityEngine.Object[] arr = null;
-#else
+#if IL2CPP
          UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> arr = null;
+#elif IL2CPPINTEROP
+         Il2CppReferenceArray<UnityEngine.Object> arr = null;
+#else
+         UnityEngine.Object[] arr = null;
 #endif
 
 
@@ -822,10 +838,12 @@ namespace XUnity.ResourceRedirector
          return intention;
       }
 
-#if MANAGED
-      internal static AssetLoadingContext Hook_AssetLoading_Prefix( AssetLoadingParameters parameters, AssetBundle bundle, ref UnityEngine.Object[] assets )
+#if IL2CPP
+      internal static AssetLoadingContext Hook_AssetLoading_Prefix( AssetLoadingParameters parameters, AssetBundle bundle, ref Il2CppReferenceArray<UnityEngine.Object> assets )
+#elif IL2CPPINTEROP
+      internal static AssetLoadingContext Hook_AssetLoading_Prefix( AssetLoadingParameters parameters, AssetBundle bundle, ref Il2CppInterop.Runtime.InteropTypes.Arrays.Il2CppReferenceArray<UnityEngine.Object> assets )
 #else
-      internal static AssetLoadingContext Hook_AssetLoading_Prefix( AssetLoadingParameters parameters, AssetBundle bundle, ref UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> assets )
+      internal static AssetLoadingContext Hook_AssetLoading_Prefix( AssetLoadingParameters parameters, AssetBundle bundle, ref UnityEngine.Object[] assets )
 #endif
       {
          var context = new AssetLoadingContext( parameters, bundle );
@@ -936,8 +954,12 @@ namespace XUnity.ResourceRedirector
             }
             else if( context.ResolveType == AsyncAssetLoadingResolve.ThroughAssets )
             {
+#if IL2CPPINTEROP
                // simply create a dummy request object
+               request = new AssetBundleRequest(IL2CPP.il2cpp_alloc((uint)System.Runtime.InteropServices.Marshal.SizeOf(typeof(AssetBundleRequest)))); // is this even legal?
+#else
                request = new AssetBundleRequest(); // is this even legal?
+#endif
                if( !context.SkipOriginalCall )
                {
                   XuaLogger.ResourceRedirector.Warn( "Resolving sync over async asset load, but 'SkipOriginalCall' was not set to true. Forcing it to true." );
@@ -963,10 +985,12 @@ namespace XUnity.ResourceRedirector
 
       internal static void Hook_AssetLoaded_Postfix( AssetLoadingParameters parameters, AssetBundle parentBundle, ref UnityEngine.Object asset )
       {
-#if MANAGED
-         UnityEngine.Object[] arr;
+#if IL2CPP
+         Il2CppReferenceArray<UnityEngine.Object> arr;
+#elif IL2CPPINTEROP
+         Il2CppReferenceArray<UnityEngine.Object> arr;
 #else
-         UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> arr;
+         UnityEngine.Object[] arr;
 #endif
          if( asset == null )
          {
@@ -994,10 +1018,12 @@ namespace XUnity.ResourceRedirector
          }
       }
 
-#if MANAGED
-      internal static void Hook_AssetLoaded_Postfix( AssetLoadingParameters parameters, AssetBundle bundle, ref UnityEngine.Object[] assets )
+#if IL2CPPINTEROP
+      internal static void Hook_AssetLoaded_Postfix( AssetLoadingParameters parameters, AssetBundle bundle, ref Il2CppReferenceArray<UnityEngine.Object> assets )
+#elif IL2CPP
+      internal static void Hook_AssetLoaded_Postfix( AssetLoadingParameters parameters, AssetBundle bundle, ref Il2CppReferenceArray<UnityEngine.Object> assets )
 #else
-      internal static void Hook_AssetLoaded_Postfix( AssetLoadingParameters parameters, AssetBundle bundle, ref UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> assets )
+      internal static void Hook_AssetLoaded_Postfix( AssetLoadingParameters parameters, AssetBundle bundle, ref UnityEngine.Object[] assets )
 #endif
       {
          FireAssetLoadedEvent( parameters.ToAssetLoadedParameters(), bundle, ref assets );
@@ -1008,7 +1034,7 @@ namespace XUnity.ResourceRedirector
 #if MANAGED
          UnityEngine.Object[] arr;
 #else
-         UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> arr;
+         Il2CppReferenceArray<UnityEngine.Object> arr;
 #endif
          if( asset == null )
          {
@@ -1039,7 +1065,7 @@ namespace XUnity.ResourceRedirector
 #if MANAGED
       internal static void Hook_ResourceLoaded_Postfix( ResourceLoadedParameters parameters, ref UnityEngine.Object[] assets )
 #else
-      internal static void Hook_ResourceLoaded_Postfix( ResourceLoadedParameters parameters, ref UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> assets )
+      internal static void Hook_ResourceLoaded_Postfix( ResourceLoadedParameters parameters, ref Il2CppReferenceArray<UnityEngine.Object> assets )
 #endif
       {
          FireResourceLoadedEvent( parameters, ref assets );
@@ -1048,7 +1074,7 @@ namespace XUnity.ResourceRedirector
 #if MANAGED
       internal static void FireAssetLoadedEvent( AssetLoadedParameters parameters, AssetBundle assetBundle, ref UnityEngine.Object[] assets )
 #else
-      internal static void FireAssetLoadedEvent( AssetLoadedParameters parameters, AssetBundle assetBundle, ref UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> assets )
+      internal static void FireAssetLoadedEvent( AssetLoadedParameters parameters, AssetBundle assetBundle, ref Il2CppReferenceArray<UnityEngine.Object> assets )
 #endif
       {
          var originalAssets = assets?.ToArray();
@@ -1180,7 +1206,7 @@ namespace XUnity.ResourceRedirector
 #if MANAGED
       internal static void FireResourceLoadedEvent( ResourceLoadedParameters parameters, ref UnityEngine.Object[] assets )
 #else
-      internal static void FireResourceLoadedEvent( ResourceLoadedParameters parameters, ref UnhollowerBaseLib.Il2CppReferenceArray<UnityEngine.Object> assets )
+      internal static void FireResourceLoadedEvent( ResourceLoadedParameters parameters, ref Il2CppReferenceArray<UnityEngine.Object> assets )
 #endif
       {
          var originalAssets = assets?.ToArray();

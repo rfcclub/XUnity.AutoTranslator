@@ -1,4 +1,4 @@
-﻿#if IL2CPP
+﻿#if IL2CPP || IL2CPPINTEROP
 
 using System;
 using System.Collections;
@@ -7,10 +7,18 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using UnhollowerBaseLib;
-using UnhollowerRuntimeLib;
 using UnityEngine;
 using XUnity.Common.Logging;
+#if IL2CPP
+using UnhollowerBaseLib;
+using UnhollowerRuntimeLib;
+#elif IL2CPPINTEROP
+using Il2CppInterop.Runtime;
+using Il2CppInterop.Runtime.InteropTypes;
+using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppInterop.Common;
+using Il2CppInterop.Runtime.Injection;
+#endif
 
 namespace XUnity.AutoTranslator.Plugin.Core
 {
@@ -18,7 +26,15 @@ namespace XUnity.AutoTranslator.Plugin.Core
    {
       static Il2CppManagedEnumerator()
       {
+#if IL2CPP
          ClassInjector.RegisterTypeInIl2CppWithInterfaces<Il2CppManagedEnumerator>( true, typeof( Il2CppSystem.Collections.IEnumerator ) );
+#elif IL2CPPINTEROP
+         RegisterTypeOptions options = new RegisterTypeOptions
+         {
+            Interfaces = new Type[] { typeof( Il2CppSystem.Collections.IEnumerator )}
+         };
+         ClassInjector.RegisterTypeInIl2Cpp<Il2CppManagedEnumerator>( options );
+#endif         
       }
 
       private readonly IEnumerator _enumerator;
